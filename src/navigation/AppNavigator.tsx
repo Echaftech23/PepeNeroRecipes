@@ -21,7 +21,7 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
-const THEME_COLOR = '#DC2626';
+const THEME_COLOR = '#FF6C44';
 
 const HomeStack = () => {
   return (

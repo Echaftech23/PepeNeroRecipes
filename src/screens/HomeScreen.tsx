@@ -10,6 +10,7 @@ import {
   Platform,
   StatusBar,
   ActivityIndicator,
+  ImageBackground,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useAppSelector, useAppDispatch} from '../store/hooks';
@@ -23,6 +24,7 @@ import {
 } from '../store/feater/recipeSlice';
 import RecipeCard from './RecipeCard';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import LinearGradient from 'react-native-linear-gradient';
 
 // Define the navigation param list types
 type RootStackParamList = {
@@ -36,6 +38,17 @@ type HomeScreenProps = {
 
 // Using TheMealDB API which is completely free to use
 const API_URL = 'https://www.themealdb.com/api/json/v1/1';
+
+// New color palette
+const COLORS = {
+  primary: '#FF6B35',     // Warm orange
+  secondary: '#004E89',   // Deep blue
+  accent: '#FCAB10',      // Golden yellow
+  neutral: '#2B2D42',     // Dark slate
+  light: '#F8F9FA',       // Off-white
+  white: '#FFFFFF',
+  gray: '#6C757D'
+};
 
 // Define recipe interface
 interface Recipe {
@@ -248,7 +261,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   if (error) {
     return (
       <SafeAreaView style={styles.centerContainer}>
-        <Icon name="alert-circle-outline" size={48} color="#DC2626" />
+        <Icon name="alert-circle-outline" size={60} color={COLORS.primary} />
         <Text style={styles.errorText}>{error}</Text>
         <TouchableOpacity
           style={styles.retryButton}
@@ -261,26 +274,39 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#DC2626" />
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Pepe Nero</Text>
-        <Text style={styles.headerSubtitle}>
-          Découvrez des recettes délicieuses
-        </Text>
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
+      
+      <View style={styles.headerWrapper}>
+        <ImageBackground 
+          source={{uri: 'https://images.unsplash.com/photo-1506368249639-73a05d6f6488?q=80&w=1000'}}
+          style={styles.headerBackground}>
+          <LinearGradient
+            colors={[COLORS.primary, 'rgba(0,0,0,0.8)']}
+            start={{x: 0, y: 0}}
+            end={{x: 0, y: 1}}
+            style={styles.headerGradient}>
+            <View style={styles.header}>
+              <Text style={styles.headerTitle}>Pepe Nero</Text>
+              <Text style={styles.headerSubtitle}>
+                Découvrez des recettes délicieuses
+              </Text>
+            </View>
+          </LinearGradient>
+        </ImageBackground>
       </View>
 
       <View style={styles.searchContainer}>
         <View style={styles.searchBox}>
           <Icon
             name="search"
-            size={24}
-            color="#666"
+            size={22}
+            color={COLORS.gray}
             style={styles.searchIcon}
           />
           <TextInput
             style={styles.searchInput}
             placeholder="Rechercher une recette..."
-            placeholderTextColor="#666"
+            placeholderTextColor={COLORS.gray}
             value={searchQuery}
             onChangeText={text => dispatch(setSearchQuery(text))}
           />
@@ -288,6 +314,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
       </View>
 
       <View style={styles.categoriesContainer}>
+        <Text style={styles.sectionTitle}>Catégories</Text>
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -315,44 +342,50 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#DC2626" />
+          <ActivityIndicator size="large" color={COLORS.primary} />
           <Text style={styles.loadingText}>Chargement des recettes...</Text>
         </View>
       ) : (
-        <FlatList
-          data={filteredRecipes}
-          renderItem={({item, index}: {item: Recipe; index: number}) => (
-            <RecipeCard
-              recipe={item}
-              index={index}
-              onPress={() => handleRecipePress(item)}
-            />
-          )}
-          keyExtractor={item => item.id}
-          contentContainerStyle={styles.list}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <Icon name="restaurant-outline" size={64} color="#ccc" />
-              <Text style={styles.emptyText}>
-                {searchQuery
-                  ? 'Aucune recette ne correspond à votre recherche'
-                  : 'Aucune recette disponible'}
-              </Text>
-              <TouchableOpacity
-                style={styles.resetButton}
-                onPress={() => {
-                  dispatch(setSearchQuery(''));
-                  dispatch(setSelectedCategory('Tout'));
-                  fetchRecipes();
-                }}>
-                <Text style={styles.resetButtonText}>
-                  Réinitialiser les filtres
+        <>
+          <View style={styles.recipesHeaderContainer}>
+            <Text style={styles.sectionTitle}>Nos Recettes</Text>
+            <Text style={styles.recipeCount}>{filteredRecipes.length} résultats</Text>
+          </View>
+          <FlatList
+            data={filteredRecipes}
+            renderItem={({item, index}: {item: Recipe; index: number}) => (
+              <RecipeCard
+                recipe={item}
+                index={index}
+                onPress={() => handleRecipePress(item)}
+              />
+            )}
+            keyExtractor={item => item.id}
+            contentContainerStyle={styles.list}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={
+              <View style={styles.emptyContainer}>
+                <Icon name="restaurant-outline" size={70} color="#ccc" />
+                <Text style={styles.emptyText}>
+                  {searchQuery
+                    ? 'Aucune recette ne correspond à votre recherche'
+                    : 'Aucune recette disponible'}
                 </Text>
-              </TouchableOpacity>
-            </View>
-          }
-        />
+                <TouchableOpacity
+                  style={styles.resetButton}
+                  onPress={() => {
+                    dispatch(setSearchQuery(''));
+                    dispatch(setSelectedCategory('Tout'));
+                    fetchRecipes();
+                  }}>
+                  <Text style={styles.resetButtonText}>
+                    Réinitialiser les filtres
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            }
+          />
+        </>
       )}
     </SafeAreaView>
   );
@@ -361,77 +394,120 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: COLORS.light,
   },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: COLORS.light,
+  },
+  headerWrapper: {
+    height: 180,
+    width: '100%',
+    overflow: 'hidden',
+  },
+  headerBackground: {
+    width: '100%',
+    height: '100%',
+  },
+  headerGradient: {
+    width: '100%', 
+    height: '100%',
+    justifyContent: 'flex-end',
   },
   header: {
-    backgroundColor: '#DC2626',
-    paddingVertical: 20,
+    paddingBottom: 24,
     paddingHorizontal: 16,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
   },
   headerTitle: {
-    color: 'white',
-    fontSize: 32,
+    color: COLORS.white,
+    fontSize: 36,
     fontWeight: 'bold',
+    marginBottom: 6,
   },
   headerSubtitle: {
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: 'rgba(255, 255, 255, 0.9)',
     fontSize: 16,
-    marginTop: 4,
   },
   searchContainer: {
     padding: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    backgroundColor: COLORS.white,
+    marginTop: -20,
+    marginHorizontal: 16,
+    borderRadius: 16,
+    shadowColor: COLORS.neutral,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+    zIndex: 10,
   },
   searchBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: COLORS.light,
     borderRadius: 12,
-    padding: Platform.OS === 'ios' ? 12 : 8,
+    padding: Platform.OS === 'ios' ? 12 : 10,
     paddingHorizontal: 16,
   },
   searchIcon: {
-    marginRight: 8,
+    marginRight: 10,
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: '#333',
+    color: COLORS.neutral,
   },
   categoriesContainer: {
-    backgroundColor: '#fff',
-    paddingVertical: 12,
+    backgroundColor: COLORS.white,
+    paddingTop: 20,
+    paddingBottom: 15,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.neutral,
+    marginBottom: 12,
+    paddingHorizontal: 16,
   },
   categoriesList: {
     paddingHorizontal: 16,
   },
   categoryButton: {
     paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#f5f5f5',
-    marginRight: 8,
+    paddingVertical: 10,
+    borderRadius: 25,
+    backgroundColor: COLORS.light,
+    marginRight: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
   },
   categoryButtonActive: {
-    backgroundColor: '#DC2626',
+    backgroundColor: COLORS.primary,
   },
   categoryButtonText: {
     fontSize: 14,
-    color: '#666',
-    fontWeight: '500',
+    color: COLORS.gray,
+    fontWeight: '600',
   },
   categoryButtonTextActive: {
-    color: '#fff',
+    color: COLORS.white,
+  },
+  recipesHeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center', 
+    paddingRight: 16,
+    paddingBottom: 5,
+  },
+  recipeCount: {
+    fontSize: 14,
+    color: COLORS.gray,
+    fontWeight: '500',
   },
   list: {
     padding: 16,
@@ -441,11 +517,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: COLORS.light,
   },
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#666',
+    color: COLORS.gray,
+    fontWeight: '500',
   },
   emptyContainer: {
     padding: 40,
@@ -454,38 +532,41 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: '#666',
-    marginTop: 10,
+    color: COLORS.gray,
+    marginTop: 16,
     textAlign: 'center',
     marginBottom: 20,
   },
   errorText: {
     fontSize: 16,
-    color: '#666',
-    marginTop: 10,
+    color: COLORS.gray,
+    marginTop: 16,
     textAlign: 'center',
     marginBottom: 20,
   },
   retryButton: {
-    backgroundColor: '#DC2626',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 10,
   },
   retryButtonText: {
-    color: 'white',
+    color: COLORS.white,
     fontWeight: 'bold',
     fontSize: 16,
   },
   resetButton: {
-    backgroundColor: '#f5f5f5',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
+    backgroundColor: COLORS.light,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
   },
   resetButtonText: {
-    color: '#666',
-    fontWeight: '500',
+    color: COLORS.neutral,
+    fontWeight: '600',
+    fontSize: 15,
   },
 });
 
