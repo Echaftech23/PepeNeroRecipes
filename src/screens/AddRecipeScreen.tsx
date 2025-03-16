@@ -10,8 +10,8 @@ import {
   FlatList,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-// Define types for our recipe
 interface Recipe {
   id: string;
   name: string;
@@ -31,6 +31,18 @@ const initialRecipeState: Recipe = {
   category: '',
   preparationTime: '',
   difficulty: '',
+};
+
+// Color palette
+const COLORS = {
+  primary: '#FF6B35',     // Warm orange
+  secondary: '#004E89',   // Deep blue
+  accent: '#FCAB10',      // Golden yellow
+  neutral: '#2B2D42',     // Dark slate
+  light: '#F8F9FA',       // Off-white
+  white: '#FFFFFF',
+  gray: '#6C757D',
+  lightGray: '#E9ECEF'
 };
 
 const AddRecipeScreen: React.FC = () => {
@@ -67,10 +79,9 @@ const AddRecipeScreen: React.FC = () => {
       return;
     }
 
-    // Create a new recipe with a unique ID
     const newRecipe: Recipe = {
       ...recipe,
-      id: Date.now().toString(), // Use timestamp as a simple unique ID
+      id: Date.now().toString(),
     };
 
     const newRecipes = [...recipes, newRecipe];
@@ -106,225 +117,192 @@ const AddRecipeScreen: React.FC = () => {
     }
   };
 
+  const getDifficultyColor = (difficulty: string) => {
+    if (difficulty.toLowerCase() === 'facile') return '#22c55e';
+    if (difficulty.toLowerCase() === 'moyen') return '#f59e0b';
+    if (difficulty.toLowerCase() === 'difficile') return '#ef4444';
+    return COLORS.gray;
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <ScrollView 
+      contentContainerStyle={styles.scrollContainer}
+      showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
-        <Text style={styles.title}>Ajouter une recette</Text>
 
-        <Text style={styles.label}>Nom de la recette: *</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Nom de la recette"
-          value={recipe.name}
-          onChangeText={(text: string) => setRecipe({...recipe, name: text})}
-        />
-
-        <Text style={styles.label}>Ingrédients: *</Text>
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="Ex: 2 œufs, 200g de farine..."
-          value={recipe.ingredients}
-          onChangeText={(text: string) =>
-            setRecipe({...recipe, ingredients: text})
-          }
-          multiline
-        />
-
-        <Text style={styles.label}>Étapes: *</Text>
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="Expliquer les étapes de préparation..."
-          value={recipe.steps}
-          onChangeText={(text: string) => setRecipe({...recipe, steps: text})}
-          multiline
-        />
-
-        <Text style={styles.label}>Catégorie: *</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ex: Pizza, Desserts..."
-          value={recipe.category}
-          onChangeText={(text: string) =>
-            setRecipe({...recipe, category: text})
-          }
-        />
-
-        <Text style={styles.label}>Temps de préparation:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ex: 30 minutes"
-          value={recipe.preparationTime}
-          onChangeText={(text: string) =>
-            setRecipe({...recipe, preparationTime: text})
-          }
-          keyboardType="numeric"
-        />
-
-        <Text style={styles.label}>Difficulté:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ex: Facile, Moyen, Difficile"
-          value={recipe.difficulty}
-          onChangeText={(text: string) =>
-            setRecipe({...recipe, difficulty: text})
-          }
-        />
-
-        <TouchableOpacity style={styles.button} onPress={handleSaveRecipe}>
-          <Text style={styles.buttonText}>Enregistrer la recette</Text>
-        </TouchableOpacity>
-
-        <Text style={styles.sectionTitle}>📌 Mes recettes</Text>
-
-        {recipes.length === 0 ? (
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyStateText}>
-              Vous n'avez pas encore ajouté de recettes.
-            </Text>
+        <View style={styles.formCard}>
+          <View style={styles.formHeader}>
+            <Icon name="restaurant-outline" size={24} color={COLORS.white} style={styles.headerIcon} />
+            <Text style={styles.formHeaderTitle}>Nouvelle Recette</Text>
           </View>
-        ) : (
-          <FlatList
-            data={recipes}
-            keyExtractor={item => item.id}
-            renderItem={({item}) => (
-              <View style={styles.recipeCard}>
-                <Text style={styles.recipeName}>{item.name}</Text>
-                <Text style={styles.recipeCategory}>
-                  Catégorie: {item.category}
-                </Text>
-                {item.preparationTime ? (
-                  <Text style={styles.recipeDetail}>
-                    Temps: {item.preparationTime} min
-                  </Text>
-                ) : null}
-                {item.difficulty ? (
-                  <Text style={styles.recipeDetail}>
-                    Difficulté: {item.difficulty}
-                  </Text>
-                ) : null}
-                <TouchableOpacity
-                  style={styles.deleteButton}
-                  onPress={() => handleDeleteRecipe(item.id)}>
-                  <Text style={styles.deleteButtonText}>Supprimer</Text>
-                </TouchableOpacity>
+
+          <View style={styles.formContent}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Nom de la recette <Text style={styles.requiredStar}>*</Text></Text>
+              <View style={styles.inputContainer}>
+                <Icon name="pencil-outline" size={20} color={COLORS.gray} style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Nom de la recette"
+                  placeholderTextColor="#9CA3AF"
+                  value={recipe.name}
+                  onChangeText={(text: string) => setRecipe({...recipe, name: text})}
+                />
               </View>
-            )}
-            showsVerticalScrollIndicator={false}
-            scrollEnabled={false} // Disable scroll inside FlatList as we're inside ScrollView
-          />
-        )}
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Ingrédients <Text style={styles.requiredStar}>*</Text></Text>
+              <View style={styles.multilineInputContainer}>
+                <Icon name="list-outline" size={20} color={COLORS.gray} style={{...styles.inputIcon, marginTop: 10}} />
+                <TextInput
+                  style={styles.multilineInput}
+                  placeholder="Ex: 2 œufs, 200g de farine..."
+                  placeholderTextColor="#9CA3AF"
+                  value={recipe.ingredients}
+                  onChangeText={(text: string) =>
+                    setRecipe({...recipe, ingredients: text})
+                  }
+                  multiline
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Étapes <Text style={styles.requiredStar}>*</Text></Text>
+              <View style={styles.multilineInputContainer}>
+                <Icon name="document-text-outline" size={20} color={COLORS.gray} style={{...styles.inputIcon, marginTop: 10}} />
+                <TextInput
+                  style={styles.multilineInput}
+                  placeholder="Expliquer les étapes de préparation..."
+                  placeholderTextColor="#9CA3AF"
+                  value={recipe.steps}
+                  onChangeText={(text: string) => setRecipe({...recipe, steps: text})}
+                  multiline
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Catégorie <Text style={styles.requiredStar}>*</Text></Text>
+              <View style={styles.inputContainer}>
+                <Icon name="pricetag-outline" size={20} color={COLORS.gray} style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Ex: Pizza, Desserts..."
+                  placeholderTextColor="#9CA3AF"
+                  value={recipe.category}
+                  onChangeText={(text: string) =>
+                    setRecipe({...recipe, category: text})
+                  }
+                />
+              </View>
+            </View>
+
+            <View style={styles.rowInputs}>
+              <View style={[styles.inputGroup, {flex: 1, marginRight: 8}]}>
+                <Text style={styles.label}>Temps</Text>
+                <View style={styles.inputContainer}>
+                  <Icon name="time-outline" size={20} color={COLORS.gray} style={styles.inputIcon} />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Minutes"
+                    placeholderTextColor="#9CA3AF"
+                    value={recipe.preparationTime}
+                    onChangeText={(text: string) =>
+                      setRecipe({...recipe, preparationTime: text})
+                    }
+                    keyboardType="numeric"
+                  />
+                </View>
+              </View>
+
+              <View style={[styles.inputGroup, {flex: 1, marginLeft: 8}]}>
+                <Text style={styles.label}>Difficulté</Text>
+                <View style={styles.inputContainer}>
+                  <Icon name="speedometer-outline" size={20} color={COLORS.gray} style={styles.inputIcon} />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Facile, Moyen..."
+                    placeholderTextColor="#9CA3AF"
+                    value={recipe.difficulty}
+                    onChangeText={(text: string) =>
+                      setRecipe({...recipe, difficulty: text})
+                    }
+                  />
+                </View>
+              </View>
+            </View>
+
+            <TouchableOpacity style={styles.button} onPress={handleSaveRecipe}>
+              <Icon name="save-outline" size={20} color={COLORS.white} style={{marginRight: 8}} />
+              <Text style={styles.buttonText}>Enregistrer la recette</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.recipesSection}>
+          <View style={styles.sectionTitleContainer}>
+            <Icon name="bookmark" size={22} color={COLORS.primary} />
+            <Text style={styles.sectionTitle}>Mes recettes</Text>
+          </View>
+
+          {recipes.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Icon name="restaurant-outline" size={60} color="#CCD1D1" />
+              <Text style={styles.emptyStateText}>
+                Vous n'avez pas encore ajouté de recettes.
+              </Text>
+            </View>
+          ) : (
+            <FlatList
+              data={recipes}
+              keyExtractor={item => item.id}
+              renderItem={({item}) => (
+                <View style={styles.recipeCard}>
+                  <View style={styles.recipeCardHeader}>
+                    <Text style={styles.recipeName}>{item.name}</Text>
+                    <View style={styles.categoryBadge}>
+                      <Text style={styles.categoryText}>{item.category}</Text>
+                    </View>
+                  </View>
+                  
+                  <View style={styles.recipeDetails}>
+                    {item.preparationTime ? (
+                      <View style={styles.detailItem}>
+                        <Icon name="time-outline" size={16} color={COLORS.gray} />
+                        <Text style={styles.recipeDetail}>{item.preparationTime} min</Text>
+                      </View>
+                    ) : null}
+                    
+                    {item.difficulty ? (
+                      <View style={styles.detailItem}>
+                        <Icon name="speedometer-outline" size={16} color={COLORS.gray} />
+                        <Text style={[
+                          styles.recipeDetail, 
+                          {color: getDifficultyColor(item.difficulty)}
+                        ]}>
+                          {item.difficulty}
+                        </Text>
+                      </View>
+                    ) : null}
+                  </View>
+                  
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => handleDeleteRecipe(item.id)}>
+                    <Icon name="trash-outline" size={16} color={COLORS.white} style={{marginRight: 5}} />
+                    <Text style={styles.deleteButtonText}>Supprimer</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              showsVerticalScrollIndicator={false}
+              scrollEnabled={false}
+            />
+          )}
+        </View>
       </View>
     </ScrollView>
   );
 };
 
-const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    paddingBottom: 20,
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#DC2626',
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 10,
-    color: '#333',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    borderRadius: 8,
-    marginTop: 5,
-    marginBottom: 10,
-    backgroundColor: '#f9f9f9',
-  },
-  multilineInput: {
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-  button: {
-    backgroundColor: '#DC2626',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 20,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
-    color: '#333',
-  },
-  recipeCard: {
-    backgroundColor: '#f8f8f8',
-    padding: 15,
-    borderRadius: 8,
-    marginTop: 10,
-    marginBottom: 10,
-    borderLeftWidth: 4,
-    borderLeftColor: '#DC2626',
-  },
-  recipeName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color: '#333',
-  },
-  recipeCategory: {
-    fontSize: 14,
-    color: '#555',
-    marginBottom: 5,
-  },
-  recipeDetail: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 2,
-  },
-  deleteButton: {
-    marginTop: 10,
-    backgroundColor: '#DC2626',
-    padding: 8,
-    borderRadius: 5,
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    width: 100,
-  },
-  deleteButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  emptyState: {
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f8f8f8',
-    borderRadius: 8,
-    marginTop: 10,
-  },
-  emptyStateText: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-  },
-});
-
-export default AddRecipeScreen;
