@@ -1,4 +1,4 @@
-package com.pepenerorecipes
+package com.mynewproject
 
 import android.app.Application
 import com.facebook.react.PackageList
