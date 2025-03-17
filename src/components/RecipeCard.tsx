@@ -7,14 +7,9 @@ import {
   TouchableOpacity,
   Animated,
 } from 'react-native';
-import { 
-  Heart, 
-  Clock, 
-  BarChart3,
-  ChevronRight 
-} from 'lucide-react-native';
-import {useAppSelector, useAppDispatch} from '../store/hooks';
-import {toggleFavorite} from '../store/feater/recipeSlice';
+import {Heart, Clock, BarChart3} from 'lucide-react-native';
+import {useAppSelector, useAppDispatch} from '../hooks';
+import {toggleFavorite} from '../store/slices/recipeSlice';
 
 interface Recipe {
   id: string;
@@ -97,7 +92,11 @@ const RecipeCard: React.FC<RecipeCardProps> = ({recipe, index, onPress}) => {
               </Text>
             </View>
             <View style={styles.footerItem}>
-              <BarChart3 size={16} color={difficultyColor} style={styles.footerIcon} />
+              <BarChart3
+                size={16}
+                color={difficultyColor}
+                style={styles.footerIcon}
+              />
               <Text style={[styles.footerText, {color: difficultyColor}]}>
                 {recipe.difficulty}
               </Text>

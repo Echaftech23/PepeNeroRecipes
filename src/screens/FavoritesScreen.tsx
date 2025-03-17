@@ -9,8 +9,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchFavorites, toggleFavorite} from '../store/feater/recipeSlice';
-import {RootState} from '../store/store'; 
+import {fetchFavorites, toggleFavorite} from '../store/slices/recipeSlice';
+import {RootState} from '../store/store';
+import {Heart} from 'lucide-react-native';
 
 const FavoritesScreen = ({navigation}: any) => {
   const dispatch = useDispatch();
@@ -36,7 +37,7 @@ const FavoritesScreen = ({navigation}: any) => {
         <TouchableOpacity
           style={styles.removeButton}
           onPress={() => removeFavorite(item)}>
-          <Text style={{fontSize: 24, color: '#DC2626'}}>❤️</Text>
+          <Heart size={24} color="#DC2626" fill="#DC2626" />
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -53,7 +54,7 @@ const FavoritesScreen = ({navigation}: any) => {
   if (favorites.length === 0) {
     return (
       <View style={styles.centerContainer}>
-        <Text style={{fontSize: 64, color: '#ccc'}}>🤍</Text>
+        <Heart size={64} color="#ccc" stroke="#ccc" />
         <Text style={styles.emptyText}>
           Vous n'avez pas encore de recettes favorites
         </Text>

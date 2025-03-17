@@ -1,17 +1,17 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import AddRecipeScreen from '../screens/AddRecipeScreen';
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
-import { View, StyleSheet } from 'react-native';
-import { Home, Heart, PlusCircle } from 'lucide-react-native';
+import {Home, Heart, Plus} from 'lucide-react-native';
 
 export type RootStackParamList = {
   Home: undefined;
-  RecipeDetails: { recipeId: string };
+  RecipeDetails: {recipeId: string};
   Search: undefined;
   Favorites: undefined;
   AddRecipe: undefined;
@@ -21,41 +21,44 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
-const THEME_COLOR = '#FF6C44';
-
 const HomeStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: THEME_COLOR,
+          backgroundColor: '#FF6B35',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
           fontWeight: 'bold',
-          fontSize: 20,
         },
-        headerShadowVisible: false,
       }}>
       <Stack.Screen
         name="Home"
         component={HomeScreen}
-        options={{
-          title: 'Pepe Nero',
-          headerTitleAlign: 'center',
-        }}
+        options={{title: 'Pepe Nero', headerShown: false}}
       />
       <Stack.Screen
         name="RecipeDetails"
         component={RecipeDetailScreen}
-        options={() => ({
+        options={({route}) => ({
           title: '',
           headerTransparent: true,
-          headerShadowVisible: false,
-          headerBackTitleVisible: false,
+          headerShown: true,
         })}
       />
     </Stack.Navigator>
+  );
+};
+
+
+const AddButton = ({onPress}) => {
+  return (
+    <TouchableOpacity style={styles.addButton} onPress={onPress}>
+      <View style={styles.addButtonInner}>
+        <Plus size={24} color="#fff" />
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -63,73 +66,60 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        screenOptions={({ route }) => ({
+        screenOptions={({route}) => ({
           headerShown: false,
-          tabBarIcon: ({ color, size }) => {
+          tabBarIcon: ({focused, color, size}) => {
             if (route.name === 'Home') {
-              return <Home size={24} color={color} />;
+              return <Home size={size} color={color} />;
             } else if (route.name === 'Favorites') {
-              return <Heart size={24} color={color} />;
-            } else if (route.name === 'AddRecipe') {
-              return <PlusCircle size={24} color={color} />;
+              return <Heart size={size} color={color} />;
             }
             return null;
           },
-          tabBarActiveTintColor: THEME_COLOR,
+          tabBarActiveTintColor: '#FF6B35',
           tabBarInactiveTintColor: 'gray',
           tabBarStyle: {
+            paddingVertical: 5,
             height: 60,
-            paddingBottom: 8,
-            paddingTop: 8,
-            borderTopWidth: 1,
-            borderTopColor: '#f0f0f0',
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
             backgroundColor: '#FFFFFF',
+            position: 'absolute',
+            borderTopWidth: 0,
             elevation: 10,
             shadowColor: '#000',
-            shadowOffset: { width: 0, height: -2 },
+            shadowOffset: {
+              width: 0,
+              height: -3,
+            },
             shadowOpacity: 0.1,
-            shadowRadius: 3,
+            shadowRadius: 5,
           },
           tabBarLabelStyle: {
+            paddingBottom: 5,
             fontSize: 12,
-            fontWeight: '500',
-          },
-          tabBarItemStyle: {
-            padding: 4,
           },
         })}>
         <Tab.Screen
           name="Home"
           component={HomeStack}
-          options={{
-            tabBarLabel: 'Accueil',
-          }}
+          options={{tabBarLabel: 'Accueil'}}
         />
         <Tab.Screen
           name="AddRecipe"
           component={AddRecipeScreen}
           options={{
-            tabBarLabel: 'Ajouter',
+            tabBarLabel: '',
+            tabBarButton: (props) => <AddButton {...props} />,
             headerStyle: {
-              backgroundColor: THEME_COLOR,
-              elevation: 0,
-              shadowOpacity: 0,
+              backgroundColor: '#FF6B35',
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
               fontWeight: 'bold',
-              fontSize: 20,
             },
             headerTitle: 'Ajouter une recette',
             headerShown: true,
-            headerTitleAlign: 'center',
-            tabBarButton: props => (
-              <View style={styles.addButtonContainer}>
-                <View style={styles.addButton}>
-                  {props.children}
-                </View>
-              </View>
-            ),
           }}
         />
         <Tab.Screen
@@ -138,18 +128,14 @@ const AppNavigator = () => {
           options={{
             tabBarLabel: 'Favoris',
             headerStyle: {
-              backgroundColor: THEME_COLOR,
-              elevation: 0,
-              shadowOpacity: 0,
+              backgroundColor: '#FF6B35',
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
               fontWeight: 'bold',
-              fontSize: 20,
             },
             headerTitle: 'Favoris',
             headerShown: true,
-            headerTitleAlign: 'center',
           }}
         />
       </Tab.Navigator>
@@ -158,23 +144,26 @@ const AppNavigator = () => {
 };
 
 const styles = StyleSheet.create({
-  addButtonContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
   addButton: {
-    top: -10,
+    top: -20,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: THEME_COLOR,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowColor: '#FF6B35',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
     shadowOpacity: 0.3,
-    shadowRadius: 3,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  addButtonInner: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#FF6B35',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
