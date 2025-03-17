@@ -22,7 +22,7 @@ import {
   setError,
   fetchFavorites,
 } from '../store/feater/recipeSlice';
-import RecipeCard from './RecipeCard';
+import RecipeCard from '../components/RecipeCard';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -39,7 +39,6 @@ type HomeScreenProps = {
 // Using TheMealDB API which is completely free to use
 const API_URL = 'https://www.themealdb.com/api/json/v1/1';
 
-// New color palette
 const COLORS = {
   primary: '#FF6B35',     // Warm orange
   secondary: '#004E89',   // Deep blue
@@ -50,7 +49,6 @@ const COLORS = {
   gray: '#6C757D'
 };
 
-// Define recipe interface
 interface Recipe {
   id: string;
   name: string;
@@ -68,7 +66,7 @@ interface ApiMeal {
   strMealThumb: string;
   strInstructions: string;
   strCategory: string;
-  [key: string]: any; // For dynamic properties like strIngredient1, etc.
+  [key: string]: any;
 }
 
 const categories = [
@@ -82,7 +80,7 @@ const categories = [
   'Végétarien',
 ];
 
-// Mapping from TheMealDB categories to our French categories
+// Map API categories to french categories
 const categoryMapping: {[key: string]: string} = {
   Pasta: 'Pâtes',
   Dessert: 'Desserts',
@@ -186,7 +184,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
             Math.min(120, ingredients * 5 + steps * 3),
           );
 
-          // Determine difficulty based on preparation time and ingredients
           let difficulty;
           if (prepTime < 30) difficulty = 'Facile';
           else if (prepTime < 60) difficulty = 'Moyen';
@@ -229,7 +226,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
     dispatch(setSelectedCategory(category));
 
     if (category !== 'Tout') {
-      // Find the API category that maps to our selected category
       const apiCategory = Object.keys(categoryMapping).find(
         key => categoryMapping[key] === category,
       );
@@ -238,7 +234,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
         fetchRecipes(apiCategory);
       }
     } else {
-      // If "All" is selected, fetch Italian recipes
       fetchRecipes();
     }
   };
@@ -253,11 +248,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
   // Handle recipe selection
   const handleRecipePress = (recipe: Recipe): void => {
-    // Navigate to recipe details screen
     navigation.navigate('RecipeDetails', {recipeId: recipe.id});
   };
 
-  // Render error state
   if (error) {
     return (
       <SafeAreaView style={styles.centerContainer}>
