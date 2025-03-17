@@ -12,7 +12,11 @@ import {
   ActivityIndicator,
   ImageBackground,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {
+  AlertCircle,
+  Search,
+  Utensils
+} from 'lucide-react-native';
 import {useAppSelector, useAppDispatch} from '../store/hooks';
 import {
   setRecipes,
@@ -254,7 +258,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   if (error) {
     return (
       <SafeAreaView style={styles.centerContainer}>
-        <Icon name="alert-circle-outline" size={60} color={COLORS.primary} />
+        <AlertCircle size={60} color={COLORS.primary} />
         <Text style={styles.errorText}>{error}</Text>
         <TouchableOpacity
           style={styles.retryButton}
@@ -290,8 +294,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
       <View style={styles.searchContainer}>
         <View style={styles.searchBox}>
-          <Icon
-            name="search"
+          <Search
             size={22}
             color={COLORS.gray}
             style={styles.searchIcon}
@@ -358,7 +361,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
-                <Icon name="restaurant-outline" size={70} color="#ccc" />
+                <Utensils size={70} color="#ccc" />
                 <Text style={styles.emptyText}>
                   {searchQuery
                     ? 'Aucune recette ne correspond à votre recherche'
