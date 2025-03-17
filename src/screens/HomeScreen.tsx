@@ -12,12 +12,8 @@ import {
   ActivityIndicator,
   ImageBackground,
 } from 'react-native';
-import {
-  AlertCircle,
-  Search,
-  Utensils
-} from 'lucide-react-native';
-import {useAppSelector, useAppDispatch} from '../store/hooks';
+import {AlertCircle, Search, Utensils} from 'lucide-react-native';
+import {useAppSelector, useAppDispatch} from '../hooks';
 import {
   setRecipes,
   setSelectedCategory,
@@ -25,7 +21,7 @@ import {
   setLoading,
   setError,
   fetchFavorites,
-} from '../store/feater/recipeSlice';
+} from '../store/slices/recipeSlice';
 import RecipeCard from '../components/RecipeCard';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import LinearGradient from 'react-native-linear-gradient';
@@ -44,13 +40,13 @@ type HomeScreenProps = {
 const API_URL = 'https://www.themealdb.com/api/json/v1/1';
 
 const COLORS = {
-  primary: '#FF6B35',     // Warm orange
-  secondary: '#004E89',   // Deep blue
-  accent: '#FCAB10',      // Golden yellow
-  neutral: '#2B2D42',     // Dark slate
-  light: '#F8F9FA',       // Off-white
+  primary: '#FF6B35', // Warm orange
+  secondary: '#004E89', // Deep blue
+  accent: '#FCAB10', // Golden yellow
+  neutral: '#2B2D42', // Dark slate
+  light: '#F8F9FA', // Off-white
   white: '#FFFFFF',
-  gray: '#6C757D'
+  gray: '#6C757D',
 };
 
 interface Recipe {
@@ -164,7 +160,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
             const detailData = await detailResponse.json();
             return detailData.meals ? detailData.meals[0] : null;
           } catch (error) {
-            console.error(`Error fetching recipe details for ${meal.idMeal}:`, error);
+            console.error(
+              `Error fetching recipe details for ${meal.idMeal}:`,
+              error,
+            );
             return null;
           }
         }),
@@ -272,10 +271,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
-      
+
       <View style={styles.headerWrapper}>
-        <ImageBackground 
-          source={{uri: 'https://images.unsplash.com/photo-1506368249639-73a05d6f6488?q=80&w=1000'}}
+        <ImageBackground
+          source={{
+            uri: 'https://images.unsplash.com/photo-1506368249639-73a05d6f6488?q=80&w=1000',
+          }}
           style={styles.headerBackground}>
           <LinearGradient
             colors={[COLORS.primary, 'rgba(0,0,0,0.8)']}
@@ -294,11 +295,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
 
       <View style={styles.searchContainer}>
         <View style={styles.searchBox}>
-          <Search
-            size={22}
-            color={COLORS.gray}
-            style={styles.searchIcon}
-          />
+          <Search size={22} color={COLORS.gray} style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
             placeholder="Rechercher une recette..."
@@ -345,7 +342,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
         <>
           <View style={styles.recipesHeaderContainer}>
             <Text style={styles.sectionTitle}>Nos Recettes</Text>
-            <Text style={styles.recipeCount}>{filteredRecipes.length} résultats</Text>
+            <Text style={styles.recipeCount}>
+              {filteredRecipes.length} résultats
+            </Text>
           </View>
           <FlatList
             data={filteredRecipes}
@@ -409,7 +408,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   headerGradient: {
-    width: '100%', 
+    width: '100%',
     height: '100%',
     justifyContent: 'flex-end',
   },
@@ -434,7 +433,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderRadius: 16,
     shadowColor: COLORS.neutral,
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: {width: 0, height: 3},
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,
@@ -496,7 +495,7 @@ const styles = StyleSheet.create({
   recipesHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center', 
+    alignItems: 'center',
     paddingRight: 16,
     paddingBottom: 5,
   },
