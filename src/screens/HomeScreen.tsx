@@ -387,4 +387,183 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.light,
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: COLORS.light,
+  },
+  headerWrapper: {
+    height: 180,
+    width: '100%',
+    overflow: 'hidden',
+  },
+  headerBackground: {
+    width: '100%',
+    height: '100%',
+  },
+  headerGradient: {
+    width: '100%', 
+    height: '100%',
+    justifyContent: 'flex-end',
+  },
+  header: {
+    paddingBottom: 24,
+    paddingHorizontal: 16,
+  },
+  headerTitle: {
+    color: COLORS.white,
+    fontSize: 36,
+    fontWeight: 'bold',
+    marginBottom: 6,
+  },
+  headerSubtitle: {
+    color: 'rgba(255, 255, 255, 0.9)',
+    fontSize: 16,
+  },
+  searchContainer: {
+    padding: 16,
+    backgroundColor: COLORS.white,
+    marginTop: -20,
+    marginHorizontal: 16,
+    borderRadius: 16,
+    shadowColor: COLORS.neutral,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+    zIndex: 10,
+  },
+  searchBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.light,
+    borderRadius: 12,
+    padding: Platform.OS === 'ios' ? 12 : 10,
+    paddingHorizontal: 16,
+  },
+  searchIcon: {
+    marginRight: 10,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: COLORS.neutral,
+  },
+  categoriesContainer: {
+    backgroundColor: COLORS.white,
+    paddingTop: 20,
+    paddingBottom: 15,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.neutral,
+    marginBottom: 12,
+    paddingHorizontal: 16,
+  },
+  categoriesList: {
+    paddingHorizontal: 16,
+  },
+  categoryButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 25,
+    backgroundColor: COLORS.light,
+    marginRight: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
+  },
+  categoryButtonActive: {
+    backgroundColor: COLORS.primary,
+  },
+  categoryButtonText: {
+    fontSize: 14,
+    color: COLORS.gray,
+    fontWeight: '600',
+  },
+  categoryButtonTextActive: {
+    color: COLORS.white,
+  },
+  recipesHeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center', 
+    paddingRight: 16,
+    paddingBottom: 5,
+  },
+  recipeCount: {
+    fontSize: 14,
+    color: COLORS.gray,
+    fontWeight: '500',
+  },
+  list: {
+    padding: 16,
+    paddingTop: 8,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.light,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: COLORS.gray,
+    fontWeight: '500',
+  },
+  emptyContainer: {
+    padding: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    fontSize: 16,
+    color: COLORS.gray,
+    marginTop: 16,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  errorText: {
+    fontSize: 16,
+    color: COLORS.gray,
+    marginTop: 16,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 10,
+  },
+  retryButtonText: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  resetButton: {
+    backgroundColor: COLORS.light,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
+  },
+  resetButtonText: {
+    color: COLORS.neutral,
+    fontWeight: '600',
+    fontSize: 15,
+  },
+});
+
 export default HomeScreen;
