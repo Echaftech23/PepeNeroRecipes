@@ -7,6 +7,12 @@ import {
   TouchableOpacity,
   Animated,
 } from 'react-native';
+import { 
+  Heart, 
+  Clock, 
+  BarChart3,
+  ChevronRight 
+} from 'lucide-react-native';
 import {useAppSelector, useAppDispatch} from '../store/hooks';
 import {toggleFavorite} from '../store/feater/recipeSlice';
 
@@ -48,6 +54,22 @@ const RecipeCard: React.FC<RecipeCardProps> = ({recipe, index, onPress}) => {
     dispatch(toggleFavorite(recipe));
   };
 
+  // Determine difficulty color
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'Facile':
+        return '#4CAF50';
+      case 'Moyen':
+        return '#FF9800';
+      case 'Difficile':
+        return '#DC2626';
+      default:
+        return '#666';
+    }
+  };
+
+  const difficultyColor = getDifficultyColor(recipe.difficulty);
+
   return (
     <Animated.View
       style={[
@@ -69,31 +91,25 @@ const RecipeCard: React.FC<RecipeCardProps> = ({recipe, index, onPress}) => {
           </Text>
           <View style={styles.cardFooter}>
             <View style={styles.footerItem}>
-              <Text style={{fontSize: 16, color: '#666', marginRight: 4}}>
-                ⏱️
-              </Text>
+              <Clock size={16} color="#666" style={styles.footerIcon} />
               <Text style={styles.footerText}>
                 {recipe.preparationTime} min
               </Text>
             </View>
             <View style={styles.footerItem}>
-              <Text style={{fontSize: 16, color: '#DC2626', marginRight: 4}}>
-                📊
-              </Text>
-              <Text style={[styles.footerText, {color: '#DC2626'}]}>
+              <BarChart3 size={16} color={difficultyColor} style={styles.footerIcon} />
+              <Text style={[styles.footerText, {color: difficultyColor}]}>
                 {recipe.difficulty}
               </Text>
             </View>
             <TouchableOpacity
               onPress={handleToggleFavorite}
               style={styles.favoriteButton}>
-              <Text
-                style={{
-                  fontSize: 22,
-                  color: isFavorite ? '#DC2626' : '#666',
-                }}>
-                {isFavorite ? '❤️' : '🤍'}
-              </Text>
+              {isFavorite ? (
+                <Heart size={20} fill="#DC2626" color="#DC2626" />
+              ) : (
+                <Heart size={20} color="#666" />
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -159,10 +175,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
   },
+  footerIcon: {
+    marginRight: 4,
+  },
   footerText: {
     fontSize: 14,
     color: '#666',
-    marginLeft: 4,
     fontWeight: '500',
   },
   favoriteButton: {
