@@ -10,7 +10,19 @@ import {
   FlatList,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {
+  Utensils,
+  Pencil,
+  ListOrdered,
+  FileText,
+  Tag,
+  Clock,
+  Gauge,
+  Save,
+  Bookmark,
+  Trash2,
+  Plus
+} from 'lucide-react-native';
 
 interface Recipe {
   id: string;
@@ -132,7 +144,7 @@ const AddRecipeScreen: React.FC = () => {
 
         <View style={styles.formCard}>
           <View style={styles.formHeader}>
-            <Icon name="restaurant-outline" size={24} color={COLORS.white} style={styles.headerIcon} />
+            <Utensils size={22} color={COLORS.white} style={styles.headerIcon} />
             <Text style={styles.formHeaderTitle}>Nouvelle Recette</Text>
           </View>
 
@@ -140,7 +152,7 @@ const AddRecipeScreen: React.FC = () => {
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Nom de la recette <Text style={styles.requiredStar}>*</Text></Text>
               <View style={styles.inputContainer}>
-                <Icon name="pencil-outline" size={20} color={COLORS.gray} style={styles.inputIcon} />
+                <Pencil size={18} color={COLORS.gray} style={styles.inputIcon} />
                 <TextInput
                   style={styles.input}
                   placeholder="Nom de la recette"
@@ -154,7 +166,7 @@ const AddRecipeScreen: React.FC = () => {
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Ingrédients <Text style={styles.requiredStar}>*</Text></Text>
               <View style={styles.multilineInputContainer}>
-                <Icon name="list-outline" size={20} color={COLORS.gray} style={{...styles.inputIcon, marginTop: 10}} />
+                <ListOrdered size={18} color={COLORS.gray} style={{...styles.inputIcon, marginTop: 10}} />
                 <TextInput
                   style={styles.multilineInput}
                   placeholder="Ex: 2 œufs, 200g de farine..."
@@ -171,7 +183,7 @@ const AddRecipeScreen: React.FC = () => {
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Étapes <Text style={styles.requiredStar}>*</Text></Text>
               <View style={styles.multilineInputContainer}>
-                <Icon name="document-text-outline" size={20} color={COLORS.gray} style={{...styles.inputIcon, marginTop: 10}} />
+                <FileText size={18} color={COLORS.gray} style={{...styles.inputIcon, marginTop: 10}} />
                 <TextInput
                   style={styles.multilineInput}
                   placeholder="Expliquer les étapes de préparation..."
@@ -186,7 +198,7 @@ const AddRecipeScreen: React.FC = () => {
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Catégorie <Text style={styles.requiredStar}>*</Text></Text>
               <View style={styles.inputContainer}>
-                <Icon name="pricetag-outline" size={20} color={COLORS.gray} style={styles.inputIcon} />
+                <Tag size={18} color={COLORS.gray} style={styles.inputIcon} />
                 <TextInput
                   style={styles.input}
                   placeholder="Ex: Pizza, Desserts..."
@@ -203,7 +215,7 @@ const AddRecipeScreen: React.FC = () => {
               <View style={[styles.inputGroup, {flex: 1, marginRight: 8}]}>
                 <Text style={styles.label}>Temps</Text>
                 <View style={styles.inputContainer}>
-                  <Icon name="time-outline" size={20} color={COLORS.gray} style={styles.inputIcon} />
+                  <Clock size={18} color={COLORS.gray} style={styles.inputIcon} />
                   <TextInput
                     style={styles.input}
                     placeholder="Minutes"
@@ -220,7 +232,7 @@ const AddRecipeScreen: React.FC = () => {
               <View style={[styles.inputGroup, {flex: 1, marginLeft: 8}]}>
                 <Text style={styles.label}>Difficulté</Text>
                 <View style={styles.inputContainer}>
-                  <Icon name="speedometer-outline" size={20} color={COLORS.gray} style={styles.inputIcon} />
+                  <Gauge size={18} color={COLORS.gray} style={styles.inputIcon} />
                   <TextInput
                     style={styles.input}
                     placeholder="Facile, Moyen..."
@@ -235,7 +247,7 @@ const AddRecipeScreen: React.FC = () => {
             </View>
 
             <TouchableOpacity style={styles.button} onPress={handleSaveRecipe}>
-              <Icon name="save-outline" size={20} color={COLORS.white} style={{marginRight: 8}} />
+              <Save size={18} color={COLORS.white} style={{marginRight: 8}} />
               <Text style={styles.buttonText}>Enregistrer la recette</Text>
             </TouchableOpacity>
           </View>
@@ -243,13 +255,13 @@ const AddRecipeScreen: React.FC = () => {
 
         <View style={styles.recipesSection}>
           <View style={styles.sectionTitleContainer}>
-            <Icon name="bookmark" size={22} color={COLORS.primary} />
+            <Bookmark size={20} color={COLORS.primary} />
             <Text style={styles.sectionTitle}>Mes recettes</Text>
           </View>
 
           {recipes.length === 0 ? (
             <View style={styles.emptyState}>
-              <Icon name="restaurant-outline" size={60} color="#CCD1D1" />
+              <Utensils size={60} color="#CCD1D1" />
               <Text style={styles.emptyStateText}>
                 Vous n'avez pas encore ajouté de recettes.
               </Text>
@@ -270,14 +282,14 @@ const AddRecipeScreen: React.FC = () => {
                   <View style={styles.recipeDetails}>
                     {item.preparationTime ? (
                       <View style={styles.detailItem}>
-                        <Icon name="time-outline" size={16} color={COLORS.gray} />
+                        <Clock size={14} color={COLORS.gray} />
                         <Text style={styles.recipeDetail}>{item.preparationTime} min</Text>
                       </View>
                     ) : null}
                     
                     {item.difficulty ? (
                       <View style={styles.detailItem}>
-                        <Icon name="speedometer-outline" size={16} color={COLORS.gray} />
+                        <Gauge size={14} color={COLORS.gray} />
                         <Text style={[
                           styles.recipeDetail, 
                           {color: getDifficultyColor(item.difficulty)}
@@ -291,7 +303,7 @@ const AddRecipeScreen: React.FC = () => {
                   <TouchableOpacity
                     style={styles.deleteButton}
                     onPress={() => handleDeleteRecipe(item.id)}>
-                    <Icon name="trash-outline" size={16} color={COLORS.white} style={{marginRight: 5}} />
+                    <Trash2 size={14} color={COLORS.white} style={{marginRight: 5}} />
                     <Text style={styles.deleteButtonText}>Supprimer</Text>
                   </TouchableOpacity>
                 </View>
@@ -333,7 +345,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerIcon: {
-    marginRight: 8,
+    marginRight: 10,
   },
   formHeaderTitle: {
     color: COLORS.white,
